@@ -80,21 +80,21 @@ function love.load()
     -- set up our sound effects; later, we can just index this table and
     -- call each entry's `play` method
     gSounds = {
-        ['paddle-hit'] = love.audio.newSource('sounds/paddle_hit.wav'),
-        ['score'] = love.audio.newSource('sounds/score.wav'),
-        ['wall-hit'] = love.audio.newSource('sounds/wall_hit.wav'),
-        ['confirm'] = love.audio.newSource('sounds/confirm.wav'),
-        ['select'] = love.audio.newSource('sounds/select.wav'),
-        ['no-select'] = love.audio.newSource('sounds/no-select.wav'),
-        ['brick-hit-1'] = love.audio.newSource('sounds/brick-hit-1.wav'),
-        ['brick-hit-2'] = love.audio.newSource('sounds/brick-hit-2.wav'),
-        ['hurt'] = love.audio.newSource('sounds/hurt.wav'),
-        ['victory'] = love.audio.newSource('sounds/victory.wav'),
-        ['recover'] = love.audio.newSource('sounds/recover.wav'),
-        ['high-score'] = love.audio.newSource('sounds/high_score.wav'),
-        ['pause'] = love.audio.newSource('sounds/pause.wav'),
+        ['paddle-hit'] = love.audio.newSource('sounds/paddle_hit.wav', "stream"),
+        ['score'] = love.audio.newSource('sounds/score.wav', "stream"),
+        ['wall-hit'] = love.audio.newSource('sounds/wall_hit.wav', "stream"),
+        ['confirm'] = love.audio.newSource('sounds/confirm.wav', "stream"),
+        ['select'] = love.audio.newSource('sounds/select.wav', "stream"),
+        ['no-select'] = love.audio.newSource('sounds/no-select.wav', "stream"),
+        ['brick-hit-1'] = love.audio.newSource('sounds/brick-hit-1.wav', "stream"),
+        ['brick-hit-2'] = love.audio.newSource('sounds/brick-hit-2.wav', "stream"),
+        ['hurt'] = love.audio.newSource('sounds/hurt.wav', "stream"),
+        ['victory'] = love.audio.newSource('sounds/victory.wav', "stream"),
+        ['recover'] = love.audio.newSource('sounds/recover.wav', "stream"),
+        ['high-score'] = love.audio.newSource('sounds/high_score.wav', "stream"),
+        ['pause'] = love.audio.newSource('sounds/pause.wav', "stream"),
 
-        ['music'] = love.audio.newSource('sounds/music.wav')
+        ['music'] = love.audio.newSource('sounds/music.wav', "stream")
     }
 
     -- the state machine we'll be using to transition between various states
