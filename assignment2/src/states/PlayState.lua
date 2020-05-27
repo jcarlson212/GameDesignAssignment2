@@ -92,6 +92,14 @@ function PlayState:update(dt)
 
     if self.powerup:collides(self.paddle) then
         self.powerup.inPlay = false
+        self.balls[self.ballNumber] = Ball()
+        self.balls[self.ballNumber].dx = math.random(-200, 200)
+        self.balls[self.ballNumber].dy = math.random(-50, -60)
+
+        self.balls[self.ballNumber].x = self.paddle.x + (self.paddle.width / 2) - 4
+        self.balls[self.ballNumber].y = self.paddle.y - 8
+        self.balls[self.ballNumber].skin = math.random(7)
+        self.ballNumber = self.ballNumber + 1
     end
     -- detect collision across all bricks with the ball
     for k, brick in pairs(self.bricks) do
