@@ -109,9 +109,13 @@ function PlayState:update(dt)
             -- only check collision if we're in play
             if brick.inPlay and ball:collides(brick) then
 
+                previousScore = self.score
                 -- add to score
                 self.score = self.score + (brick.tier * 200 + brick.color * 25)
 
+                if math.floor(self.score / 5000) > math.floor(previousScore / 5000) then
+                    self.paddle:grow()
+                end
                 -- trigger the brick's hit function, which removes it from play
                 brick:hit()
 
@@ -201,6 +205,8 @@ function PlayState:update(dt)
         if ball.y >= VIRTUAL_HEIGHT then
             self.health = self.health - 1
             gSounds['hurt']:play()
+
+            self.paddle:shrink()
     
             if self.health == 0 then
                 gStateMachine:change('game-over', {
