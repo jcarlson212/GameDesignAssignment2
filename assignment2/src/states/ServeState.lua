@@ -28,16 +28,22 @@ function ServeState:enter(params)
     self.powerup = params.powerup
 
     -- init new ball (random color for fun)
-    self.ball = Ball()
-    self.ball.skin = math.random(7)
+    self.balls = {}
+    self.ballNumber = 1
+    self.balls[0] = Ball()
+    self.balls[0].skin = math.random(7)
 end
 
 function ServeState:update(dt)
     -- have the ball track the player
     self.paddle:update(dt)
-    self.ball.x = self.paddle.x + (self.paddle.width / 2) - 4
-    self.ball.y = self.paddle.y - 8
 
+    for i=0,(self.ballNumber-1) do
+        ball = self.balls[i]
+        ball.x = self.paddle.x + (self.paddle.width / 2) - 4
+        ball.y = self.paddle.y - 8
+    end
+    
     if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
         -- pass in all important state info to the PlayState
         gStateMachine:change('play', {
@@ -46,7 +52,8 @@ function ServeState:update(dt)
             health = self.health,
             score = self.score,
             highScores = self.highScores,
-            ball = self.ball,
+            balls = self.balls,
+            ballNumber = self.ballNumber,
             level = self.level,
             recoverPoints = self.recoverPoints,
             powerup = self.powerup
@@ -60,7 +67,10 @@ end
 
 function ServeState:render()
     self.paddle:render()
-    self.ball:render()
+    for i=0,(self.ballNumber-1) do
+        ball = self.balls[i]
+        ball:render()
+    end
 
     for k, brick in pairs(self.bricks) do
         brick:render()
