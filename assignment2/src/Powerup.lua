@@ -11,7 +11,7 @@
 
 Powerup = Class{}
 
-function Powerup:init()
+function Powerup:init(type)
     -- simple positional and dimensional variables
     self.width = 15
     self.height = 15
@@ -21,8 +21,11 @@ function Powerup:init()
     self.dy = 10
     self.dx = 0
 
-    self.x = VIRTUAL_WIDTH / 2 - 2
-    self.y = VIRTUAL_HEIGHT / 2 - 2
+    --self.x = VIRTUAL_WIDTH / 2 - 2
+    --self.y = VIRTUAL_HEIGHT / 2 - 2
+
+    --the type of power up. 10 = more balls, 11 = key
+    self.type = type
 
     --timer for when the powerup should reset 
     self.resetTimer = 0
@@ -84,7 +87,11 @@ function Powerup:update(dt)
     -- reset the powerup to the top of the screen if it has been
     -- more than 20 seconds
     if self.resetTimer > 30 then
-        self:reset()
+        if self.isKey then
+            self.resetTimer = 0
+        else
+            self:reset()
+        end
     end
 
 end
@@ -95,7 +102,7 @@ function Powerup:render()
     -- by ball, I mean the things shaped like a ball in the last row. These are different from the 
     -- textures used in ball.lua
     if self.inPlay then
-        love.graphics.draw(gTextures['main'], gFrames['powerups'][9],
+        love.graphics.draw(gTextures['main'], gFrames['powerups'][self.type],
             self.x, self.y)
     end
 end

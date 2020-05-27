@@ -30,7 +30,9 @@ function PlayState:enter(params)
     self.ballNumber = params.ballNumber
     self.level = params.level
 
-    self.powerup = params.powerup
+    self.hasKey = params.hasKey
+    self.powerups = params.powerups
+    self.powerupNum = params.powerupNum
 
     self.recoverPoints = 5000
 
@@ -62,7 +64,10 @@ function PlayState:update(dt)
         ball = self.balls[i]
         ball:update(dt)
     end
-    self.powerup:update(dt)
+
+    for i=0,(self.powerupNum-1) do
+        self.powerups[i]:update(dt)
+    end
 
 
     for i=0,(self.ballNumber-1) do
@@ -89,17 +94,18 @@ function PlayState:update(dt)
         end
     end
     
+    for i=0,(self.powerupNum-1) do
+        if self.powerups[i]:collides(self.paddle) then
+            self.powerups[i].inPlay = false
+            self.balls[self.ballNumber] = Ball()
+            self.balls[self.ballNumber].dx = math.random(-200, 200)
+            self.balls[self.ballNumber].dy = math.random(-50, -60)
 
-    if self.powerup:collides(self.paddle) then
-        self.powerup.inPlay = false
-        self.balls[self.ballNumber] = Ball()
-        self.balls[self.ballNumber].dx = math.random(-200, 200)
-        self.balls[self.ballNumber].dy = math.random(-50, -60)
-
-        self.balls[self.ballNumber].x = self.paddle.x + (self.paddle.width / 2) - 4
-        self.balls[self.ballNumber].y = self.paddle.y - 8
-        self.balls[self.ballNumber].skin = math.random(7)
-        self.ballNumber = self.ballNumber + 1
+            self.balls[self.ballNumber].x = self.paddle.x + (self.paddle.width / 2) - 4
+            self.balls[self.ballNumber].y = self.paddle.y - 8
+            self.balls[self.ballNumber].skin = math.random(7)
+            self.ballNumber = self.ballNumber + 1
+        end
     end
     -- detect collision across all bricks with the ball
     for k, brick in pairs(self.bricks) do
@@ -117,7 +123,14 @@ function PlayState:update(dt)
                     self.paddle:grow()
                 end
                 -- trigger the brick's hit function, which removes it from play
-                brick:hit()
+                brick:hit(self.hasKey)
+
+                if brick.inPlay == false then
+                    self.powerups[self.powerupNum] = Powerup((math.random(1,2) - 1))
+                    self.powerups[self.powerupNum].x = brick.x
+                    self.powerups[self.powerupNum].y = brick.y
+                    self.powerupNum = self.powerupNum + 1
+                end
 
                 -- if we have enough points, recover a point of health
                 if self.score > self.recoverPoints then
@@ -143,7 +156,9 @@ function PlayState:update(dt)
                         highScores = self.highScores,
                         balls = self.balls,
                         recoverPoints = self.recoverPoints,
-                        powerup = self.powerup
+                        powerups = self.powerups,
+                        powerupNum = self.powerupNum,
+                        hasKey = false
                     })
                 end
 
@@ -222,7 +237,9 @@ function PlayState:update(dt)
                     highScores = self.highScores,
                     level = self.level,
                     recoverPoints = self.recoverPoints,
-                    powerup = self.powerup
+                    powerups = self.powerups,
+                    powerupNum = self.powerupNum,
+                    hasKey = self.hasKey
                 })
             end
         end
@@ -255,8 +272,10 @@ function PlayState:render()
         ball = self.balls[i]
         ball:render()
     end
-    
-    self.powerup:render()
+
+    for i=0,(self.powerupNum-1) do
+        self.powerups[i]:render()
+    end
 
     renderScore(self.score)
     renderHealth(self.health)
