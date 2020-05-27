@@ -66,8 +66,10 @@ function love.load()
         ['paddles'] = GenerateQuadsPaddles(gTextures['main']),
         ['balls'] = GenerateQuadsBalls(gTextures['main']),
         ['bricks'] = GenerateQuadsBricks(gTextures['main']),
-        ['hearts'] = GenerateQuads(gTextures['hearts'], 10, 9)
+        ['hearts'] = GenerateQuads(gTextures['hearts'], 10, 9),
+        ['powerups'] = GenerateQuadsPowerups(gTextures['main']),
     }
+
     
     -- initialize our virtual resolution, which will be rendered within our
     -- actual window no matter its dimensions
@@ -153,7 +155,7 @@ end
 function love.update(dt)
     -- this time, we pass in dt to the state object we're currently using
     gStateMachine:update(dt)
-
+    
     -- reset keys pressed
     love.keyboard.keysPressed = {}
 end
