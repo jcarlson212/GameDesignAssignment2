@@ -29,6 +29,8 @@ function PlayState:enter(params)
     self.ball = params.ball
     self.level = params.level
 
+    self.powerup = params.powerup
+
     self.recoverPoints = 5000
 
     -- give ball random starting velocity
@@ -53,6 +55,7 @@ function PlayState:update(dt)
     -- update positions based on velocity
     self.paddle:update(dt)
     self.ball:update(dt)
+    self.powerup:update(dt)
 
     if self.ball:collides(self.paddle) then
         -- raise ball above paddle in case it goes below it, then reverse dy
@@ -75,6 +78,9 @@ function PlayState:update(dt)
         gSounds['paddle-hit']:play()
     end
 
+    if self.powerup:collides(self.paddle) then
+        self.powerup.inPlay = false
+    end
     -- detect collision across all bricks with the ball
     for k, brick in pairs(self.bricks) do
 
@@ -110,7 +116,8 @@ function PlayState:update(dt)
                     score = self.score,
                     highScores = self.highScores,
                     ball = self.ball,
-                    recoverPoints = self.recoverPoints
+                    recoverPoints = self.recoverPoints,
+                    powerup = self.powerup
                 })
             end
 
@@ -182,7 +189,8 @@ function PlayState:update(dt)
                 score = self.score,
                 highScores = self.highScores,
                 level = self.level,
-                recoverPoints = self.recoverPoints
+                recoverPoints = self.recoverPoints,
+                powerup = self.powerup
             })
         end
     end
@@ -210,6 +218,7 @@ function PlayState:render()
 
     self.paddle:render()
     self.ball:render()
+    self.powerup:render()
 
     renderScore(self.score)
     renderHealth(self.health)

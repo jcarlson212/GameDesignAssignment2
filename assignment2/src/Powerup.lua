@@ -18,8 +18,16 @@ function Powerup:init()
 
     -- these variables are for keeping track of our velocity on both the
     -- X and Y axis, since the ball can move in two dimensions
-    self.dy = 0
+    self.dy = 10
     self.dx = 0
+
+    self.x = VIRTUAL_WIDTH / 2 - 2
+    self.y = VIRTUAL_HEIGHT / 2 - 2
+
+    --timer for when the powerup should reset 
+    self.resetTimer = 0
+
+    self.inPlay = true
 end
 
 --[[
@@ -49,18 +57,28 @@ end
 function Powerup:reset()
     self.x = VIRTUAL_WIDTH / 2 - 2
     self.y = VIRTUAL_HEIGHT / 2 - 2
-    self.dx = -1
-    self.dy = -1
+    self.dx = 0
+    self.dy = 10
+    self.resetTimer = 0
+    self.inPlay = true
 end
 
 function Powerup:update(dt)
     self.x = self.x + self.dx * dt
     self.y = self.y + self.dy * dt
+    self.resetTimer = self.resetTimer + dt
 
-    -- allow ball to bounce off walls
+    -- Powerup stops falling once it is off the screen
     if self.y >= VIRTUAL_HEIGHT then
         self.x = 0
         self.dy = 0
+        self.inPlay = false
+    end
+
+    -- reset the powerup to the top of the screen if it has been
+    -- more than 20 seconds
+    if self.resetTimer > 30 then
+        self:reset()
     end
 
 end
@@ -68,6 +86,10 @@ end
 function Powerup:render()
     -- gTexture is our global texture for all blocks
     -- the last ball in gFrames['powerup'] is the key ball (which is at position 9 - indexing from 0)
-    love.graphics.draw(gTextures['main'], gFrames['powerups'][9],
-        self.x, self.y)
+    -- by ball, I mean the things shaped like a ball in the last row. These are different from the 
+    -- textures used in ball.lua
+    if self.inPlay then
+        love.graphics.draw(gTextures['main'], gFrames['powerups'][9],
+            self.x, self.y)
+    end
 end
